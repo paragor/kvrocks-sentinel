@@ -21,20 +21,20 @@ services:
 #      - "6380:6379"
   
   m:
-    image: foxdalas/kvrocks:latest 
-    command: kvrocks -c /etc/kvrocks/kvrocks.conf
+    image: apache/kvrocks:2.3.0 
+    command:  -c /kvrocks/conf/kvrocks.conf
     volumes:
       - "master:/data"
-      - ./kvrocks-master.conf:/etc/kvrocks/kvrocks.conf
+      - ./kvrocks-master.conf:/kvrocks/conf/kvrocks.conf
     ports:
       - "6379:6379"
 
   s:
-    image: foxdalas/kvrocks:latest
-    command: kvrocks -c /etc/kvrocks/kvrocks.conf
+    image: apache/kvrocks:2.3.0
+    command:  -c /kvrocks/conf/kvrocks.conf
     volumes:
       - "slave:/data"
-      - ./kvrocks-slave.conf:/etc/kvrocks/kvrocks.conf
+      - ./kvrocks-slave.conf:/kvrocks/conf/kvrocks.conf
     ports:
       - "6380:6379"
   

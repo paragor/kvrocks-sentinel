@@ -4,6 +4,8 @@ services:
   client:
     image: redis:6-alpine
     command: sleep 50000
+    volumes:
+      - ./tls:/etc/redis/certs
 
 #  m:
 #    image: redis:6-alpine
@@ -21,22 +23,22 @@ services:
 #      - "6380:6379"
   
   m:
-    image: foxdalas/kvrocks:latest 
-    command: kvrocks -c /etc/kvrocks/kvrocks.conf
+    image: apache/kvrocks:2.3.0 
+    
     volumes:
       - master:/data
-      - ./kvrocks-master.conf:/etc/kvrocks/kvrocks.conf
-      - ./tls:/etc/ssl/certs
+      - ./kvrocks-master.conf:/kvrocks/conf/kvrocks.conf
+      - ./tls:/etc/redis/certs
     ports:
       - "6379:6379"
 
   s:
-    image: foxdalas/kvrocks:latest
-    command: kvrocks -c /etc/kvrocks/kvrocks.conf
+    image: apache/kvrocks:2.3.0
+    
     volumes:
       - slave:/data
-      - ./kvrocks-slave.conf:/etc/kvrocks/kvrocks.conf
-      - ./tls:/etc/ssl/certs
+      - ./kvrocks-slave.conf:/kvrocks/conf/kvrocks.conf
+      - ./tls:/etc/redis/certs
     ports:
       - "6380:6379"
   
@@ -45,21 +47,21 @@ services:
     command: redis-server /redis/sentinel.conf --sentinel
     volumes:
       - ./sentinel.conf:/redis/sentinel.conf
-      - ./tls:/etc/ssl/certs
+      - ./tls:/etc/redis/certs
  
   se2:
     image: redis:6-alpine
     command: redis-server /redis/sentinel.conf --sentinel
     volumes:
       - ./sentinel.conf:/redis/sentinel.conf
-      - ./tls:/etc/ssl/certs
+      - ./tls:/etc/redis/certs
  
   se3:
     image: redis:6-alpine
     command: redis-server /redis/sentinel.conf --sentinel
     volumes:
       - ./sentinel.conf:/redis/sentinel.conf
-      - ./tls:/etc/ssl/certs
+      - ./tls:/etc/redis/certs
 
 volumes:
   master: {}
