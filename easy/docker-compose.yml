@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  kvrocks-1:
+    image: apache/kvrocks:nightly-20230309-80260d7 
+    command:  -c /kvrocks/conf/kvrocks.conf
+    volumes:
+      - "master:/data"
+      - ./kvrocks-master.conf:/kvrocks/conf/kvrocks.conf
+    ports:
+      - "6379:6379"
+
+  kvrocks-2:
+    image: apache/kvrocks:nightly-20230309-80260d7
+    command:  -c /kvrocks/conf/kvrocks.conf
+    volumes:
+      - "slave:/data"
+      - ./kvrocks-slave.conf:/kvrocks/conf/kvrocks.conf
+    ports:
+      - "6380:6379"
+  
+  kvrocks-sentinel-1:
+    image: redis:6-alpine
+    command: redis-server /redis/sentinel.conf --sentinel
+    volumes:
+      - "./sentinel.conf:/redis/sentinel.conf"
+  
+  kvrocks-sentinel-2:
+    image: redis:6-alpine
+    command: redis-server /redis/sentinel.conf --sentinel
+    volumes:
+      - "./sentinel.conf:/redis/sentinel.conf"
+  
+  kvrocks-sentinel-3:
+    image: redis:6-alpine
+    command: redis-server /redis/sentinel.conf --sentinel
+    volumes:
+      - "./sentinel.conf:/redis/sentinel.conf"
+
+volumes:
+  master: {}
+  slave: {}
